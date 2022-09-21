@@ -63,7 +63,7 @@ class UserController extends Controller
             
             return response()->json([
                 'status' => 1,
-                'msg' => 'Bienvenido!!',
+                'msg' => 'Bienvenido!!'.auth()->user()->name,
                 'access_token' => $generateToken,
             ]);
         }
