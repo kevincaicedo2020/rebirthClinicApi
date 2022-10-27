@@ -10,7 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 use Illuminate\Contracts\Auth\CanResetPassword;
 
-class User extends Authenticatable
+class Patient extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -44,7 +44,6 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-
     public function rol(){
         return $this->belongsTo(Rol::class);
     }
