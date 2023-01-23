@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('gender');
             $table->string('phone');
             $table->string('password');
+            $table->string('image_url')->nullable();
             $table->foreignId('rol_id')->constrained('rols');
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();

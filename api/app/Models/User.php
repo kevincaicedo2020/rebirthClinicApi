@@ -23,7 +23,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'rol_id'
+        'rol_id',
+        'image_url'
     ];
 
     /**
@@ -48,4 +49,9 @@ class User extends Authenticatable
     public function rol(){
         return $this->belongsTo(Rol::class);
     }
+
+    public function patients(){
+        return $this->belongsToMany(Patient::class, 'patient_user')->using(PatientUser::class)->withTimestamps()->withPivot('medicalAppointment', 'hour', 'dateIdentifier');
+    }
+    
 }

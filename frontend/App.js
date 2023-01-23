@@ -12,8 +12,5 @@ export default function App() {
         <Navigation />
       </NavigationContainer>
     </AuthContext>
-    
   );
 }
-
-  

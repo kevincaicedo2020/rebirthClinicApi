@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Requests\authenticate;
+namespace App\Http\Requests\crud;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Password;
 
-class LoginAuthenticateRequest extends FormRequest
+class UpdateUserSpecialistRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,25 +24,15 @@ class LoginAuthenticateRequest extends FormRequest
     public function rules()
     {
         return [
-            'rol_id' => 'required|not_in:0',
+            'name' => 'required|string',
             'email' => 'required|email',
-            'password' => ['required', Password::min(8)->mixedCase()->letters()->numbers()->uncompromised(),],
         ];
     }
-
     public function attributes()//Sirve para modificar las variables con nombres personalizados
     {
         return [
+            'name' => 'nombre',
             'email' => 'correo',
-            'password' => 'contraseña',
-        ];
-    }
-    //Sirve para modificar un mensaje completo sobre un tipo de error
-    public function messages()
-    {
-        return [
-            'rol_id.not_in' => 'Seleccione el tipo de usuario.',
-            'password.required' => 'La contraseña es obligatoria.',
         ];
     }
 }

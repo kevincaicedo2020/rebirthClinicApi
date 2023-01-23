@@ -19,29 +19,22 @@ class ForgotPasswordController extends Controller
     public function forgotPassword(Request $request)
     {
         $validator = $request->validate([
-            'email' => 'required|email|string'
+            'email' => 'required|email'
         ]);
-
-        if (!$validator){
-            return response()->json([
-                'status' => 0,
-                'msg' => 'Ingrese un correo válido'
-            ]);
-        }
 
         if (User::where('email', $request->email)->first()) {
             $user = User::where('email', $request->email)->first();
         } else {
             $user = Patient::where('email', $request->email)->first();
         }
-        
+
         if ($user) {
 
-            if ($user->rol_id===2) {
+            if ($user->rol_id === 2) {
                 $status = Password::sendResetLink(
                     $request->only('email')
                 );
-            } elseif ($user->rol_id===1) {
+            } elseif ($user->rol_id === 1) {
                 $status = Password::broker('pantients')->sendResetLink(
                     $request->only('email')
                 );
@@ -58,11 +51,10 @@ class ForgotPasswordController extends Controller
                 'status' => 1,
                 'msg' => 'Intentelo de nuevo'
             ]);
-            
         } else {
             return response()->json([
                 'status' => 0,
-                'msg' => 'usuario no existente'
+                'msg' => 'Usuario no existente'
             ]);
         }
     }
@@ -80,7 +72,7 @@ class ForgotPasswordController extends Controller
             'password' => 'required|min:8|confirmed'
         ]);
 
-        if (!$validator){
+        if (!$validator) {
             return view('email.formEmailResetPassword', ['msg' => 'Intentelo de nuevo']);
         }
 
@@ -99,7 +91,7 @@ class ForgotPasswordController extends Controller
 
             if ($verifyEmailEqual) {
 
-                if ($user->rol_id===2) {
+                if ($user->rol_id === 2) {
 
                     $status = Password::reset(
                         $request->only('email', 'password', 'password_confirmation', 'token'),
@@ -107,39 +99,36 @@ class ForgotPasswordController extends Controller
                             $user->forceFill([
                                 'password' => Hash::make($password)
                             ])->setRememberToken(Str::random(60));
-                 
+
                             $user->save();
-                 
+
                             event(new PasswordReset($user));
                         }
                     );
+                } elseif ($user->rol_id === 1) {
 
-                } elseif ($user->rol_id===1) {
+                    $status = Password::broker('pantients')->reset(
+                        $request->only('email', 'password', 'password_confirmation', 'token'),
+                        function ($user, $password) {
+                            $user->forceFill([
+                                'password' => Hash::make($password)
+                            ])->setRememberToken(Str::random(60));
 
-                   $status = Password::broker('pantients')->reset(
-                    $request->only('email', 'password', 'password_confirmation', 'token'),
-                    function ($user, $password) {
-                        $user->forceFill([
-                            'password' => Hash::make($password)
-                        ])->setRememberToken(Str::random(60));
-             
-                        $user->save();
-             
-                        event(new PasswordReset($user));
+                            $user->save();
+
+                            event(new PasswordReset($user));
                         }
                     );
-
                 }
-                
+
                 if ($status) {
                     return view('email.formEmailResetPassword', ['msg' => 'Contraseña actualizada']);
                 } else {
                     return view('email.formEmailResetPassword', ['msg' => 'Ocurrio un error']);
                 }
             }
-        }else {
+        } else {
             return view('email.formEmailResetPassword', ['msg' => 'Verifica que todo esté bien']);
         }
-        
     }
 }

@@ -9,7 +9,7 @@ class Rol extends Model
 {
     use HasFactory;
 
-    protected $timestamps = false;
+    
 
     public function users(){
         return $this->hasMany(User::class);

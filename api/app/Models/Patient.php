@@ -20,10 +20,12 @@ class Patient extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'ci',
         'name',
         'email',
         'password',
-        'rol_id'
+        'rol_id',
+        'image_url'
     ];
 
     /**
@@ -44,7 +46,12 @@ class Patient extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
     public function rol(){
         return $this->belongsTo(Rol::class);
     }
+
+    public function users(){
+        return $this->belongsToMany(User::class, 'patient_user')->using(PatientUser::class)->withTimestamps()->withPivot('medicalAppointment', 'hour', 'dateIdentifier');
+    }    
 }
