@@ -64,7 +64,10 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
-
+        'pantients' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Patient::class,
+        ],
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',
@@ -89,6 +92,12 @@ return [
     'passwords' => [
         'users' => [
             'provider' => 'users',
+            'table' => 'password_resets',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'pantients' => [
+            'provider' => 'pantients',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,

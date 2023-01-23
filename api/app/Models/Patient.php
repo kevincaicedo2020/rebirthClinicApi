@@ -10,7 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 use Illuminate\Contracts\Auth\CanResetPassword;
 
-class User extends Authenticatable
+class Patient extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -20,6 +20,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'ci',
         'name',
         'email',
         'password',
@@ -50,8 +51,7 @@ class User extends Authenticatable
         return $this->belongsTo(Rol::class);
     }
 
-    public function patients(){
-        return $this->belongsToMany(Patient::class, 'patient_user')->using(PatientUser::class)->withTimestamps()->withPivot('medicalAppointment', 'hour', 'dateIdentifier');
-    }
-    
+    public function users(){
+        return $this->belongsToMany(User::class, 'patient_user')->using(PatientUser::class)->withTimestamps()->withPivot('medicalAppointment', 'hour', 'dateIdentifier');
+    }    
 }
